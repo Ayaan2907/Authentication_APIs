@@ -1,0 +1,13 @@
+SHOW DATABASES;
+CREATE DATABASE IF NOT EXISTS nodejs_application;
+USE nodejs_application;
+
+CREATE TABLE  IF NOT EXISTS users(
+    id INT(11) UNIQUE NOT NULL AUTO_INCREMENT,
+    username VARCHAR(10) NOT NULL,
+    email VARCHAR(20) NOT NULL,
+    password VARCHAR(20) NOT NULL,
+    PRIMARY KEY(id)
+);
+DESCRIBE users;
+

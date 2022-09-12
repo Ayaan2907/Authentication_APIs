@@ -43,7 +43,7 @@ module.exports = {
     deleteUser: (req, res) => {
         const id = req.params.id;
         deleteUserService(id, (err, result) => {
-            if (err) {
+            if (err || !result) {
                 console.log(err);
                 return res.status(500).json({
                     success: 0,

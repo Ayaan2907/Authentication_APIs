@@ -3,13 +3,13 @@ const {
     getAllUsersService,
     deleteUserService,
 } = require("./service");
-// const { hashSync, genSaltSync } = require("bcrypt");
+const { hashSync, genSaltSync } = require("bcrypt");
 
 module.exports = {
     createUser: (req, res) => {
         const body = req.body;
-        // const salt = genSaltSync(10);
-        // body.password = hashSync(body.password, salt);
+        const salt = genSaltSync(10);
+        body.password = hashSync(body.password, salt);
         console.log(body);
         createUserService(body, (err, results) => {
             if (err) {

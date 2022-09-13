@@ -1,7 +1,10 @@
 import './Styles/App.css';
 import { Routes, Route} from 'react-router-dom';
-import { Home, About, Login, Signup } from './components/index.js';
+import { Home, About, Login, Signup } from './components/Index.js';
+import axios from 'axios';
+import { useState, useEffect } from 'react';
 function App() {
+
   return (
     <div className="App">
       <header className="App-header">

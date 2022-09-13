@@ -79,9 +79,8 @@ module.exports = {
                 const JWT = sign(
                     { result: results },
                     // process.env.API_KEY, {
-                    "sample",{
-                        expiresIn: "10h",
-                    }
+                    "SampleToken@12345",
+                    { expiresIn: "1h" }
                 );
                 return res.status(200).json({
                     success: 1,

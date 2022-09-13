@@ -30,6 +30,9 @@ module.exports = {
             if (err) {
                 return callBack(err);
             }
+            if (results.affectedRows === 0) {
+                return callBack({ message: "User not found" });
+            }
             return callBack(null, results);
         });
     },

@@ -4,6 +4,8 @@ const creteUserQuery = `INSERT INTO users ( username, email, password) VALUES (?
 const getAllUsersQuery = `SELECT * FROM users`;
 const deleteUserQuery = `DELETE FROM users WHERE id = ?`;
 const getUserByEmailQuery = `SELECT * FROM users WHERE email = ?`;
+const getGpsDataQuery = `SELECT * FROM gps_data`;
+
 module.exports = {
     createUserService: (body, callBack) => {
         pool.query(
@@ -42,6 +44,14 @@ module.exports = {
                 return callBack(err);
             }
             return callBack(null, results[0]);
+        });
+    },
+    getGpsDataService: (callBack) => {
+        pool.query(getGpsDataQuery, [], (err, results, fields) => {
+            if (err) {
+                return callBack(err);
+            }
+            return callBack(null, results);
         });
     },
 };

@@ -3,6 +3,7 @@ const {
     getAllUsersService,
     deleteUserService,
     getUserByEmailService,
+    getGpsDataService,
 } = require("./service");
 const { hashSync, genSaltSync, compareSync } = require("bcrypt");
 const { sign } = require("jsonwebtoken");
@@ -95,4 +96,19 @@ module.exports = {
             }
         });
     },
+    getGpsData: (req, res) => {
+        getGpsDataService((err, results) => {
+            if (err) {
+                console.log(err);
+                return res.status(500).json({
+                    success: 0,
+                    message: err.message,
+                });
+            }
+            return res.status(200).json({
+                success: 1,
+                data: results,
+            });
+        });
+    }
 };

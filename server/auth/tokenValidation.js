@@ -3,7 +3,8 @@ module.exports = {
     validateToken: (req, res, next) => {
         let token = req.get("authorization");
         // const token = req.body.token || req.query.token || req.headers["x-access-token"];
-        token = (token === String? token.slice(7):null); // remove "Bearer" from token string to hide the token type 
+        token= token.slice(7);
+        // token = (token === String ? token.slice(7) : null); // remove "Bearer" from token string to hide the token type 
         if (token) {
             JWT.verify(token,
                 // process.env.API_KEY,

@@ -5,7 +5,7 @@ const router = require('express').Router();
 
 // public routes
 router.post('/signup', createUser);
-router.get('/login', logIn);
+router.post('/login', logIn);
 
 // protected routes
 router.get('/users',validateToken, getAllUsers);

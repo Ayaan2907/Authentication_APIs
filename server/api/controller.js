@@ -10,6 +10,7 @@ const { sign } = require("jsonwebtoken");
 
 module.exports = {
     createUser: (req, res) => {
+        console.log("create user called")
         const body = req.body;
         const salt = genSaltSync(10);
         body.password = hashSync(body.password, salt);
@@ -28,6 +29,7 @@ module.exports = {
         });
     },
     getAllUsers: (req, res) => {
+        console.log("get all users called")
         getAllUsersService((err, results) => {
             if (err) {
                 console.log(err);
@@ -43,6 +45,7 @@ module.exports = {
         });
     },
     deleteUser: (req, res) => {
+        console.log("delete user called")
         const id = req.params.id;
         deleteUserService(id, (err, result) => {
             if (err || !result) {
@@ -59,6 +62,7 @@ module.exports = {
         });
     },
     logIn: (req, res) => {
+        console.log("login route called")
         const body = req.body;
         getUserByEmailService(body.email, (err, results) => {
             if (err) {
@@ -97,6 +101,7 @@ module.exports = {
         });
     },
     getGpsData: (req, res) => {
+        console.log("get gps data called")
         getGpsDataService((err, results) => {
             if (err) {
                 console.log(err);

@@ -23,8 +23,8 @@ pool.getConnection((err, connection) => {
         }
     }
     if (connection) connection.release();
+    console.log(`Database connected at ${process.env.DB_HOST}:${process.env.DB_PORT}`)
     return;
 });
-console.log(process.env);
 
 module.exports = pool;

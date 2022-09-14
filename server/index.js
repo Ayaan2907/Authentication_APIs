@@ -2,7 +2,15 @@ const express = require("express");
 require("dotenv").config();
 const PORT = process.env.PORT || 4114;
 const routers= require("./api/router");
-const app = express();
+const app = express()
+const cors = require("cors");
+
+var corsOptions = {
+    origin: ["*"],
+    optionsSuccessStatus: 200 // For legacy browser support
+}
+
+app.use(cors(corsOptions));
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());

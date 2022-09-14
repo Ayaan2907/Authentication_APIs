@@ -88,6 +88,7 @@ module.exports = {
                     { expiresIn: "1h" }
                 );
                 return res.status(200).json({
+                    user : results,
                     success: 1,
                     message: "login successfully",
                     token: JWT,

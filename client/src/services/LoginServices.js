@@ -7,6 +7,7 @@ export default async function LoginServices(body) {
         window.localStorage.setItem("token", response.data.token);
         window.localStorage.setItem("user", JSON.stringify(response.data.user));
         console.log(response);
+        return response.data.user;
     } catch (error) {
         window.alert(error.response.data.message);
     }

@@ -1,16 +1,18 @@
 import "./Styles/App.css";
 import { Routes, Route } from "react-router-dom";
-import { Home, About, Login, Signup } from "./components/Index.js";
+import { Home, Login, Signup } from "./components/Index.js";
 import axios from "axios";
-import { useEffect } from "react";
+import { useEffect, useState} from "react";
 function App() {
+    const [user, setUser] = useState(null || window.localStorage.getItem("user"));
+    // const [gpsData, setGpsData] = useState([]);
+    // const [isAuthenticated, setIsAuthenticated] = useState(false);
+    // const [isLoading, setIsLoading] = useState(true);
     useEffect(() => {
-        const user = window.localStorage.getItem("user");
         const token = window.localStorage.getItem("token");
-        // JSON.parse(user)
         if (user && token) {
             axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-        }else{
+        } else {
             delete axios.defaults.headers.common["Authorization"];
         }
     }, []);
@@ -19,10 +21,22 @@ function App() {
         <div className="App">
             <header className="App-header">
                 <Routes>
-                    <Route path="/" element={<Login />} />
+                    <Route
+                        path="/"
+                        element={<Login user={user} setUser={setUser}  />}
+                    />
                     <Route path="/signup" element={<Signup />} />
-                    <Route path="/home" element={<Home />} />
-                    <Route path="/about" element={<About />} />
+                    <Route
+                        path="/home"
+                        element={
+                            // user ? (
+                                // <Home gpsData={gpsData} setGpsData={setGpsData} setUser={setUser} />
+                                <Home  setUser={setUser} />
+                            // ) : (
+                                // <Login user={user} setUser={setUser} />
+                            // )
+                        }
+                    />
                     <Route path="*" element={<div>404</div>} />
                 </Routes>
             </header>

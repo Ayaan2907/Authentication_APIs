@@ -1,7 +1,9 @@
 import React,{useState} from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate} from "react-router-dom";
 import LoginServices from "../../services/LoginServices";
-export default function Login() {
+export default function Login({user, setUser}) {
+    const navigate = useNavigate();
+    // const [user, setUser] = useState({})
     const [body, setBody] = useState({
         email: "",
         password:""
@@ -9,7 +11,12 @@ export default function Login() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        LoginServices(body);
+        setUser(LoginServices(body));
+        window.localStorage.setItem("user", user); //manual jugad to hold the user state, instead of context or redux.
+        // LoginServices(body);
+        setTimeout(() => {
+            navigate("/home");
+        }, 1000);
         console.log(body);
     }
 

@@ -3,8 +3,7 @@ module.exports = {
     validateToken: (req, res, next) => {
         let token = req.get("authorization");
         // const token = req.body.token || req.query.token || req.headers["x-access-token"];
-        token= token.slice(7);
-        // token = (token === String ? token.slice(7) : null); // remove "Bearer" from token string to hide the token type 
+        token = token?.slice(7); // remove Bearer from string // using optional chaining, if token is undefined, it will return undefined instead of error of undefined.slice()
         if (token) {
             JWT.verify(token,
                 // process.env.API_KEY,

@@ -93,12 +93,13 @@ module.exports = {
                     message: "login successfully",
                     token: JWT,
                 });
-            } else {
-                return res.status(401).json({
-                    success: 0,
-                    message: "Invalid email or password",
-                });
             }
+            // else {
+            //     return res.status(401).json({
+            //         success: 0,
+            //         message: "Invalid email or password",
+            //     });
+            // }
         });
     },
     getGpsData: (req, res) => {

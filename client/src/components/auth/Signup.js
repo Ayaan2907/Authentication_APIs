@@ -14,7 +14,7 @@ export default function Signup() {
         SignupServices(body);
         setTimeout(() => {
             navigate("/home");
-        }, 2000);
+        }, 3000);
     }
     
     return (

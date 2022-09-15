@@ -6,10 +6,8 @@ export default async function SignupServices(body) {
     axios
         .post(`${API_URL}/api/signup`, body)
         .then((res) => {
-            console.log(res.data);
-            setTimeout(() => {
-                LoginServices(body);
-            }, 1000);
+            console.log(res);
+            res.data.success && LoginServices(body);
         })
         .catch((err) => {
             window.alert(err.response.data.message);

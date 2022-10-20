@@ -20,7 +20,8 @@ export default function Login() {
         console.log(response.success)
         if (response.success) {
             dispatch(loginUser(response.user));
-                navigate("/home");
+            setTimeout(() =>{navigate("/home")
+            }, 3000)
         }
     };
 

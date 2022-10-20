@@ -13,8 +13,8 @@ export default function Signup() {
         e.preventDefault();
         SignupServices(body);
         setTimeout(() => {
-            navigate("/home");
-        }, 3000);
+            navigate("/");
+        }, 1000);
     }
     
     return (

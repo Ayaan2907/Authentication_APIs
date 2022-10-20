@@ -33,3 +33,25 @@ React, Node.js, Express, MySQL
 5. Run `npm start` in the server directory
 6. Run `npm start` in the client directory
 7. Open `http://localhost:3000` in the browser
+
+## Api Documentation
+- Base Url `localhost:PORT_NUMBER`
+- `get  /` Test Call Hello World
+- `post  api/signup` Signup route
+- `post  api/login` Login route
+- `get  api/users` Results all available users
+- `delete  api/user/:id` deletes user with id
+- `get  api/gps` Results all available devices
+- `get  api/gps/:id`  Results devices with DeviceId = id
+
+
+## Functionalities
+# Search
+Searching in the search bar by DeviceType displays devices of that type
+
+# Pagination
+As mentioned pagination is also implimented
+
+# Pie chart
+Pie chart show the time of device at that location
+

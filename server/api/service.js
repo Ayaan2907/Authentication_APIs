@@ -5,6 +5,7 @@ const getAllUsersQuery = `SELECT * FROM users`;
 const deleteUserQuery = `DELETE FROM users WHERE id = ?`;
 const getUserByEmailQuery = `SELECT * FROM users WHERE email = ?`;
 const getGpsDataQuery = `SELECT * FROM gps_data`;
+const getGpsDataByIdQuery = `SELECT * FROM gps_data WHERE id = ?`;
 
 module.exports = {
     createUserService: (body, callBack) => {

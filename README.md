@@ -55,3 +55,10 @@ As mentioned pagination is also implimented
 # Pie chart
 Pie chart show the time of device at that location
 
+## Manual Test case limitations
+- Catching invalid email, password error
+- Catching Unauthorised access
+- Catching invalid token
+- Catching server or database errors
+
+and alerting them all.

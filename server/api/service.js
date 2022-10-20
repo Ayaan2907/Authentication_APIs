@@ -54,4 +54,12 @@ module.exports = {
             return callBack(null, results);
         });
     },
+    getGpsDataByIdService: (id,callBack) => {
+        pool.query(getGpsDataByIdQuery, [id], (err, results, fields) => {
+            if (err) {
+                return callBack(err);
+            }
+            return callBack(null, results);
+        });
+    },
 };

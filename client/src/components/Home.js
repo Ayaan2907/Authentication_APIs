@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Stack, Pagination, TextInput, createStyles } from "@mantine/core";
+import { Table, Pagination, TextInput, createStyles } from "@mantine/core";
 // import { IconSearch } from "@tabler/icons";
 import FetchDataService from "../services/FetchDataService";
 import { Link } from "react-router-dom";
@@ -58,6 +58,7 @@ export default function Home() {
                         <td> -- </td>
                         <td>{data.Location}</td>
                     </tr>
+                    <br />
                 </Link>
             </>
         );
@@ -65,48 +66,30 @@ export default function Home() {
 
     return (
         <>
-            <div className="flex flex-col">
-                <TextInput
-                    onChange={(e) => {
-                        setSearchTerm(e.target.value);
-                        onkeydown = (e) => {
-                            if (e.key === "Enter") {
-                                handleSearchInput(e);
-                            }
-                        };
-                    }}
-                    className={classes.input}
+            <TextInput
+                onChange={(e) => {
+                    setSearchTerm(e.target.value);
+                    onkeydown = (e) => {
+                        if (e.key === "Enter") {
+                            handleSearchInput(e);
+                        }
+                    };
+                }}
+                className={classes.input}
+            />
+            <Table>
+                <tbody>{row}</tbody>
+            </Table>
+
+            {gpsData.length > 10 ? (
+                <Pagination
+                    total={total}
+                    // limit={devicesPerPage}
+                    onChange={paginate}
+                    size="lg"
+                    data-mantine-composable
                 />
-                <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
-                    <div className="py-2 inline-block min-w-full sm:px-6 lg:px-8">
-                        <div className="overflow-x-auto">
-                            <table className="min-w-full">
-                                <thead>
-                                    <tr>
-                                        <th
-                                            scope="col"
-                                            className="text-sm font-medium text-900 px-6 py-4 text-left"
-                                        >
-                                            Device Type Device Id Time stamp
-                                            Location
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>{row}</tbody>
-                            </table>
-                        </div>
-                    </div>
-                    {gpsData.length > 10 ? (
-                        <Pagination
-                            total={total}
-                            // limit={devicesPerPage}
-                            onChange={paginate}
-                            size="lg"
-                            data-mantine-composable
-                        />
-                    ) : null}
-                </div>
-            </div>
+            ) : null}
         </>
     );
 }

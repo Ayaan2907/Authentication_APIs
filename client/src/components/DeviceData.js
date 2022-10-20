@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Pie } from "react-chartjs-2";
 import FetchDataByIdSearvice from "../services/FetchDataByIdService";
+import { Table } from "@mantine/core";
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 export default function DeviceData() {
@@ -23,13 +24,9 @@ export default function DeviceData() {
         return (
             <>
                 <tr key={data.id}>
-                    <td>{data.DeviceId}</td>
-                    <td> -- </td>
-                    <td>{data.DeviceType}</td>
-                    <td> -- </td>
                     <td>{data.Timing}</td>
-                    <td> -- </td>
                     <td>{data.Location}</td>
+                    <br/>
                 </tr>
             </>
         );
@@ -75,7 +72,9 @@ export default function DeviceData() {
     return (
         <>
             <div className="min-h-full flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-                <table>{row}</table>
+            {deviceData[0]?.DeviceId} <br/>
+                {deviceData[0]?.DeviceType}
+                <Table>{row}</Table>
                 <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
                     <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
                         <Pie data={data} />

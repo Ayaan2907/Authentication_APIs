@@ -4,12 +4,11 @@ const userSlice = createSlice({
     name: "user",
     initialState: {
         user: null,
-        authorised :false
     },
     reducers: {
         loginUser: (state, action) => {
-            state.user = action.payload.user;
-            state.authorised = action.payload.authorised;
+            state.user = action.payload;
+            window.localStorage.setItem("user", state.user);
         },
         logoutUser: (state) => {
             state.authorised  = false

@@ -19,10 +19,7 @@ export default function Login() {
 
         console.log(response.success)
         if (response.success) {
-            dispatch(loginUser({
-                user: response.user,
-                authorised: true
-            }));
+            dispatch(loginUser(response.user));
                 navigate("/home");
         }
     };

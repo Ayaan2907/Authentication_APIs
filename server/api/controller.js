@@ -120,10 +120,10 @@ module.exports = {
         });
     },
     getGpsDataById: (req, res) => {
-        console.log("get gps data called")
+        console.log("get gps data by id called")
         const id = req.params.id;
-        getGpsDataByIdService(id, (err, result) => {
-            if (err || !result) {
+        getGpsDataByIdService(id, (err, results) => {
+            if (err) {
                 console.log(err);
                 return res.status(500).json({
                     success: 0,
@@ -132,8 +132,8 @@ module.exports = {
             }
             return res.status(200).json({
                 success: 1,
-                data: result,
+                data: results,
             });
         });
-    }
+    },
 };

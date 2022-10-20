@@ -1,9 +1,20 @@
 import React, { useEffect, useState } from "react";
+import { Stack, Pagination } from "@mantine/core";
 import FetchDataService from "../services/FetchDataService";
 import { Link } from "react-router-dom";
 export default function Home() {
     const [gpsData, setGpsData] = useState([]);
     const [dataToDisplay, setDataToDisplay] = useState([]);
+    
+    // pagination
+    const [page, setPage] = useState(1);
+    const [devicesPerPage] = useState(5);
+    const indexOfLastDevice = page * devicesPerPage;
+    const indexOfFirstDevice = indexOfLastDevice - devicesPerPage;
+    const data = gpsData.slice(indexOfFirstDevice, indexOfLastDevice);
+    const paginate = (pageNumber) => setPage(pageNumber);
+    const total = 1 + gpsData.length/devicesPerPage;
+
 
     useEffect(() => {
         setTimeout(() => {
@@ -31,7 +42,7 @@ export default function Home() {
     };
         
         
-    const row = gpsData?.map((data) => {
+    const row = data?.map((data) => {
         return (
             <>
                 <Link to={`/gps/${data.DeviceId}`}>
@@ -45,7 +56,6 @@ export default function Home() {
                         <td>{data.Location}</td>
                     </tr>
                 </Link>
-                <hr />
             </>
         );
     });
@@ -77,14 +87,15 @@ export default function Home() {
                             </table>
                         </div>
                     </div>
-                    <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                        onclick={(e)=>handlePagination(e)}
-                    >
-                    next
-                </button>
-                <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                    prev
-                    </button>
+                    {gpsData.length > 10 ? (
+                <Pagination
+                    total={total}
+                    // limit={devicesPerPage}
+                    onChange={paginate}
+                    size="lg"
+                    data-mantine-composable
+                />
+            ) : null}
                 </div>
             </div>
         </>

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Pie } from 'react-chartjs-2';
-import FetchDataByIdSearvice from "../services/FetchDataService";
+import FetchDataByIdSearvice from "../services/FetchDataByIdService";
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 export default function DeviceData() {
@@ -13,11 +13,14 @@ export default function DeviceData() {
         setTimeout(() => {
             FetchDataByIdSearvice(id).then((data) => {
                 setDeviceData(data);
-            });
+            }).catch((error) => {
+                console.log(error);
+            }
+            );
         }, 4000);
     }, [id]);
 
-    const row = deviceData?.map((data) => {
+    const row = deviceData.map((data) => {
         return (
             <>
                 <tr key={data.id}>
@@ -33,20 +36,16 @@ export default function DeviceData() {
         );
     });
 
-    // TODO: handle logic for calculating location and generate pie based on that
     useEffect(() => {
-        const locations = deviceData?.map((data) => {
+        const locations = deviceData.map((data) => {
             return data.Location;
         });            
-        console.log(locations)
         const locationCount = locations.reduce((acc, curr) => {
 
             acc[curr] = (acc[curr] || 0) + 1;
             return acc;
         }, {});
         setLocationData(locationCount);
-        // setLocationData(loc);
-        console.log(locationCount);
     }, [deviceData]);
 
     const data = {
@@ -85,21 +84,6 @@ export default function DeviceData() {
                     </div>  
                 </div>
             </div>
-
-
-            {/* <PieChart width={400} height={400}>
-                <Pie
-                    data={data}
-                    dataKey="students"
-                    cx="50%"
-                    cy="50%"
-                    outerRadius={80}
-                    fill="#8884d8"
-                    label
-                />
-            </PieChart> */}
-
-
         </>
     );
 }

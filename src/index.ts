@@ -1,70 +1,27 @@
-const express = require("express");
-require("dotenv").config();
-const PORT = process.env.PORT || 4114;
-const routers= require("./api/router");
-const app = express()
-const cors = require("cors");
+import express, { Express, Request, Response } from "express";
+import config from "./config/config.js";
+import mongoose from "mongoose";
 
-var corsOptions = {
-    origin: ["*","http://localhost:3000"],
-    optionsSuccessStatus: 200 // For legacy browser support
-}
+const router: Express = express();
 
-app.use(cors(corsOptions));
-
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
-app.use("/api", routers);
-
-app.get('/', (req, res) => {
-    res.send(`Hello World! on ${PORT}`);
-})
-
-app.listen(PORT, () => {
-    console.log(`Server is listening on PORT ${PORT}`);
+mongoose.set("strictQuery", false)
+mongoose
+    .connect(config.dataBase.MONGO_URL, {
+        retryWrites: true,
+        w: "majority",
+    
+    })
+    .then(() => {
+        console.log("Connected to MongoDB");
+    })
+    .catch((err) => {
+        console.log("Error connecting to MongoDB", err);
+    });
+    
+router.get("/", (req: Request, res: Response) => {
+    res.send("Hello World");
 });
 
-
-// const ROUTES = {
-//     HOME: "/",
-//     DASHBOARD: "/dashboard",
-//     // API
-//     API: "/api",
-//     SIGNUP: "/api/signup",
-//     LOGIN: "/api/login",
-//     LOGOUT: "/api/logout",
-// };
-
-// app.get(ROUTES.HOME, (req, res) => {
-//     console.log("Home page");
-//     // if(err) throw err;
-//     res.send("Home Page");
-// });
-
-// app.get(ROUTES.API, (req, res) => {
-//     connection.query("SELECT * FROM sample", (err, rows, fields) => {
-//         if (err) {
-//             console.log(err);
-//             res.sendStatus(500);
-//             return;
-//         }
-//         res.json(rows);
-//         console.log("sample table");
-//     });
-// });
-
-// app.post(ROUTES.SIGNUP, (req, res) => {
-//     res.send("Signup Page");
-// });
-
-// app.post(ROUTES.LOGIN, (req, res) => {
-//     res.send("Login Page");
-// });
-
-// app.post(ROUTES.LOGOUT, (req, res) => {
-//     res.send("Logout Page");
-// });
-
-// app.get(ROUTES.DASHBOARD, (req, res) => {
-//     res.send("Dashboard Page");
-// });
+router.listen(config.server.SERVER_PORT, () => {
+    console.log(`Server started at port ${config.server.SERVER_PORT}`);
+});

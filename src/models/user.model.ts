@@ -6,7 +6,6 @@ interface UserModel extends User {
     email: string;
     password: string;
     createdAt: Date;
-    updatedAt: Date;
 }
 
 const userSchema: Schema = new Schema({
@@ -26,10 +25,6 @@ const userSchema: Schema = new Schema({
         required: true,
     },
     createdAt: {
-        type: Date,
-        default: Date.now,
-    },
-    updatedAt: {
         type: Date,
         default: Date.now,
     },

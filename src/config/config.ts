@@ -11,6 +11,8 @@ const SERVER_HOSTNAME: string = process.env.SERVER_HOSTNAME || "localhost";
 
 const LOGGING_FLAG: boolean = process.env.LOGGING_FLAG === "true" || false;
 
+const JWT_SECRET: string = process.env.JWT_SECRET || "secret";
+
 const config = {
     dataBase: {
         MONGO_URL,
@@ -20,6 +22,9 @@ const config = {
         SERVER_HOSTNAME,
     },
     logging: LOGGING_FLAG,
+    jwt: {
+        JWT_SECRET,
+    },
 };
 
 export default config;

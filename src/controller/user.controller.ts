@@ -1,7 +1,7 @@
-import { Express, Request, Response, NextFunction } from "express";
+import {  Request, Response, NextFunction } from "express";
 import mongoose from "mongoose";
 import UserInstance from "../models/user.model.js";
-import { User } from "../types/user.type";
+// import { IUser } from "../types/user.type";
 import Logging from "../library/logging.js";
 import bcrypt from "bcrypt";
 

@@ -61,9 +61,3 @@ JWT_EXPIRY_TIME=
 -   [x] Logging using `chalk` : custome logging (winston etc not used, may be required in future)
 -   [x] Organized file structure (routes, controllers, models, services, utils, config)
 -   [x] Error handling
-
-<!-- tags -->
-
-## Tags
-
-`Nodejs` `MongoDB` `JWT` `Authentication` `Authorization` `Express` `Mongoose` `Bcrypt` `Chalk` `Dotenv` `Nodemon`

@@ -3,22 +3,26 @@ import { Response } from "express";
 
 const commonErrorActions = {
     missingFields: (res: Response) => {
-        Logging.warning("Missing fields");
-        return res.status(400).json({ error: "Missing fields" });
+        const error = new Error("Missing Fields");
+        Logging.error(error);
+        return res.status(400).json({ error: error });
     },
     Unauthorized: (res: Response) => {
-        Logging.warning("Unauthorized");
-        return res.status(401).json({ error: "Unauthorized" });
+        const error = new Error("Unauthorized");
+        Logging.error(error);
+        return res.status(401).json({ error: error });
     },
 
     emptyResponse: (res: Response) => {
-        Logging.warning("Not found");
-        return res.status(404).json({ error: "Not found" });
+        const error = new Error("Not found");
+        Logging.error(error);
+        return res.status(404).json({ error: error });
     },
 
     invalid: (res: Response) => {
-        Logging.warning("Invalid ");
-        return res.status(400).json({ error: "Invalid " });
+        const error = new Error("Invalid");
+        Logging.error(error);
+        return res.status(400).json({ error: error });
     },
     other: (res: Response, error: Error | unknown) => {
         Logging.error(error);

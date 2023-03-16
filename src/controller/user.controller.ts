@@ -1,145 +1,117 @@
-import {  Request, Response, NextFunction } from "express";
+import { Request, Response, NextFunction } from "express";
 import mongoose from "mongoose";
-import UserInstance from "../models/user.model.js";
-// import { IUser } from "../types/user.type";
-import Logging from "../library/logging.js";
 import bcrypt from "bcrypt";
+import userCollection from "../models/user.model.js";
+import commonErrorActions from "../types/error.type.js";
+import generateAuthToken from "../middleware/generateAuthToken";
+import Logging from "../library/logging.js";
+import { IUser } from "../types/user.type.js";
 
-const createUser = async (req: Request, res: Response) => {
-    const { name, email, password } = req.body;
+const createUser = async (req: Request, res: Response, next: NextFunction) => {
+    const { name, email, password, role } = req.body;
 
     if (!name || !email || !password) {
-        Logging.warning("Missing fields");
-        return res.status(400).json({ error: "Missing fields" });
-    }  
+        return commonErrorActions.missingFields(res);
+    }
 
     bcrypt.hash(password, 10, async (err, hash) => {
         if (err) {
-            Logging.error(err);
-            res.status(500).json({ error: err });
+            commonErrorActions.other(res, err);
         } else {
-            const user = new UserInstance({
+            const user = new userCollection({
                 _id: new mongoose.Types.ObjectId(),
                 name,
                 email,
                 password: hash,
+                role,
             });
-
             try {
                 await user.save();
                 Logging.info(`User ${user.name} created`);
-                res.status(201).json({ user });
+                res.status(201).send({ user });
+                next(loginUser); //FIXME: is it correct or not check
             } catch (error) {
-                Logging.error(error);
-                res.status(500).json({ error });
+                commonErrorActions.other(res, error);
             }
         }
     });
 };
-const getUser = async (req: Request, res: Response) => {
-    const { id } = req.params;
+const getUser = async (req: Request, res: Response, next: NextFunction) => {
+    const { id, email } = req.params;
 
-    if (!id) {
-        Logging.warning("Missing fields");
-        return res.status(400).json({ error: "Missing fields" });
+    if (!id && !email) {
+        return commonErrorActions.missingFields(res);
     }
     try {
-        const user = await UserInstance.findById(id);
+        const user = await (!email
+            ? userCollection.findById(id)
+            : userCollection.findOne({ email }));
+
         if (!user) {
-            Logging.warning("User not found");
-            return res.status(404).json({ error: "User not found" });
+            return commonErrorActions.emptyResponse(res);
         }
+
         Logging.info(`User ${user.name} found`);
-        res.status(200).json({ user });
+        res.status(200).send({ user });
     } catch (error) {
-        Logging.error(error);
-        res.status(500).json({ error });
+        commonErrorActions.other(res, error);
     }
 };
 const getAllUsers = async (req: Request, res: Response) => {
     try {
-        const users = await UserInstance.find();
+        const users = await userCollection.find();
         Logging.info(users);
-        res.status(200).json({ users });
+        res.status(200).send({ users });
     } catch (error) {
-        Logging.error(error);
-        res.status(500).json({ error });
+        commonErrorActions.other(res, error);
     }
 };
 
-const updateUser = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-) => {
-    // todo
-};
-const deleteUser = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-) => {
-    // todo
-
-};
-
 const loginUser = async (req: Request, res: Response, next: NextFunction) => {
+    const { email, password } = req.body;
 
-     // const { email, password } = req.body;
-    // if (!email || !password) {
-    //     Logging.warning("Missing fields");
-    //     return res.status(400).json({ error: "Missing fields" });
-    // }
-    // try {
-    //     // if (!mongoose.isValidObjectId(email)) {
-    //     //     Logging.warning("Invalid email");
-    //     //     return res.status(400).json({ error: "Invalid email" });
-    //     // }
+    if (!email || !password) {
+        return commonErrorActions.missingFields(res);
+    }
 
-    //     await UserInstance.findOne({ email }, (err: Error, user: User) => {
-    //         if (err) {
-    //             Logging.error(err);
-    //             return res.status(500).json({ error: err });
-    //         }
-    //         if (!user) {
-    //             Logging.warning("User not found");
-    //             return res.status(404).json({ error: "User not found" });
-    //         }
-    //         bcrypt.compare(password, user.password, (err, isPasswordValid) => {
-    //             if (err) {
-    //                 Logging.error(err);
-    //                 return res.status(500).json({ error: err });
-    //             }
-    //             if (!isPasswordValid) {
-    //                 Logging.warning("Invalid password");
-    //                 return res.status(400).json({ error: "Invalid password" });
-    //             }
-    //             Logging.event(`user.name: ${user.name} logged in`);
+    if (!mongoose.isValidObjectId(email)) {
+        return commonErrorActions.invalid(res);
+    }
 
-    //             const token = jwt.sign(
-    //                 { _id: user.id, email: user.email },
-    //                 config.jwt.JWT_SECRET,
-    //                 {
-    //                     expiresIn: "1h",
-    //                 }
-    //             );
-    //             Logging.event(`Token generated for user: ${user.name}`);
-    //             res.header("x-auth-token", token).json({ token });
+    try {
+        const user: IUser | null = await userCollection.findOne({ email });
 
-    //             next();
-    //         });
-    //     });
-    // } catch (error) {
-    //     Logging.error(error);
-    //     res.status(500).json({ error });
-    // }
+        if (!user) {
+            return commonErrorActions.emptyResponse(res);
+        }
+        bcrypt.compare(password, user.password).then((result) => {
+            if (result) {
+                const token = generateAuthToken(user, res);
+                Logging.info(`User ${user.name} logged in`);
+                res.header("x-auth-token").status(200).send({ token });
+        // res.header("x-auth-token", token).json({ token });
+
+            } else {
+                commonErrorActions.Unauthorized(res);
+            }
+        });
+    } catch (error) {
+        commonErrorActions.other(res, error);
+    }
+};
+
+const updateUser = async (req: Request, res: Response, next: NextFunction) => {
+    // todo
+};
+const deleteUser = async (req: Request, res: Response, next: NextFunction) => {
+    // todo
 };
 
 export default {
     createUser,
     getUser,
+    getAllUsers,
+    loginUser,
     updateUser,
     deleteUser,
-    getAllUsers,
-    // loginUser,
 };

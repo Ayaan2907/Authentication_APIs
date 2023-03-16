@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 import userCollection from "../models/user.model.js";
 import commonErrorActions from "../types/error.type.js";
-import generateAuthToken from "../middleware/generateAuthToken";
+import generateAuthToken from "../middleware/generateAuthToken.js";
 import Logging from "../library/logging.js";
 import { IUser } from "../types/user.type.js";
 

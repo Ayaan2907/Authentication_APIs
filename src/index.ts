@@ -1,9 +1,11 @@
-import express, { Express, Request, Response } from "express";
+import express, { Express, Request, Response, NextFunction } from "express";
 import mongoose from "mongoose";
 import http from "http";
 import config from "./config/config.js";
 import Logging from "./library/logging.js";
-import apiRouter from "./routes/auther.routes.js"
+import authRouter from "./routes/auther.routes.js";
+import decodeAuthToken from "./middleware/decodeAuthToken.js";
+import { IUser } from "./types/user.type.js";
 
 const router: Express = express();
 const allowedOrigins = ["*"];
@@ -31,10 +33,6 @@ const connectDatabase = () => {
 connectDatabase();
 
 const initServer = (router: Express) => {
-    // router.get("/", (req: Request, res: Response) => {
-    //     res.send("Hello World");
-    // });
-
     router.use(express.json());
     router.use(express.urlencoded({ extended: true }));
     router.use((req, res, next) => {
@@ -42,7 +40,10 @@ const initServer = (router: Express) => {
         Logging.info(req.body);
 
         res.header("Access-Control-Allow-Origin", allowedOrigins);
-        res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+        res.header(
+            "Access-Control-Allow-Methods",
+            "GET, POST, PUT, PATCH, DELETE"
+        );
         res.header(
             "Access-Control-Allow-Headers",
             "Origin, X-Requested-With, Content-Type, Accept, Authorization"
@@ -50,21 +51,20 @@ const initServer = (router: Express) => {
         next();
     });
 
-    router.get("/", (req: Request, res: Response) => {
-        res.send("Hello World");
+    // auth routes : create, login, update, delete user, getOne, getAll
+    router.use("/auth", authRouter);
+
+    // example route to check token based access
+    router.get("/video", decodeAuthToken, (req: Request, res: Response) => {
+        const user = req.body.user as IUser;
+        if (user.role !== "student") res.status(401).send("Unauthorized");
+        else {
+            Logging.event(`User ${user.name} is watching video`);
+            res.send("Hello World video");
+        }
     });
 
-    // other routes here
-    router.use("/api", apiRouter);
-    
-
-    router.use((req, res) => {
-        const error = new Error("Route Not found");
-        Logging.error(error);
-        return res.status(404).json({
-            message: error.message,
-        });
-    });
+    // TODO: a way to handle unavailable routes
 
     http.createServer(router).listen(config.server.SERVER_PORT, () => {
         Logging.log(`Server started at port ${config.server.SERVER_PORT}`);

@@ -1,64 +1,69 @@
-# Pensieve full stack assignment
+# Authentication_APIs
 
-## Introduction
+## Description
 
-This is a full stack assignment for Pensieve. The goal is to build a simple web application that allows users to login/dignup and access the GPS devices data provided and stored in database.
+This is a `Nodejs ` project that provides APIs for authentication and authorization. It uses `MongoDB` as the database and `JWT` for authentication.
 
-## Tech stack
-React, Node.js, Express, MySQL
+## Working Features
 
-## Remaining details will be updated later.
+-   [x] User Signup
+-   [x] User Signin
+-   [x] User Update
+-   [x] User Delete
+-   [x] Get all users
+-   [] User Logout
+-   [] User Forgot Password
+-   [] User Reset Password
 
+## Installation
 
-## How to run the application
+1. Clone the repo
+2. `cd Authentication_APIs`
+3. `npm install`
+4. Create a `.env` file in the root directory and add the following environment variables
 
-### Prerequisites
+```
+SERVER_PORT
 
-- Node.js
-- MySQL
+MONGO_USERNAME=
+MONGO_PASSWORD=
 
-### Steps
+LOGGING_FLAG=true
 
-1. Clone the repository
-2. Run `npm install` in the server, client directories
-3. Create a database in MySQL and run the `init_DB.sql` file in the server directory
-4. Create a `.env` file in the server directory and add the following environment variables
-    - `PORT_NUMBER` 
-    - `DB_HOST`
-    - `USR`
-    - `PASSWORD`
-    - `DATABASE`
-    - `DB_PORT`
+JWT_SECRET=
+JWT_EXPIRY_TIME=
+```
 
-5. Run `npm start` in the server directory
-6. Run `npm start` in the client directory
-7. Open `http://localhost:3000` in the browser
+5. `npm run dev`
 
-## Api Documentation
-- Base Url `localhost:PORT_NUMBER`
-- `get  /` Test Call Hello World
-- `post  api/signup` Signup route
-- `post  api/login` Login route
-- `get  api/users` Results all available users
-- `delete  api/user/:id` deletes user with id
-- `get  api/gps` Results all available devices
-- `get  api/gps/:id`  Results devices with DeviceId = id
+## Usage
 
+1. `npm run dev` to start the server in development mode
+2. `npm run build` to compile into javascript
+3. `npm run start` to start the server (dist/ js code) in production mode
 
-## Functionalities
-# Search
-Searching in the search bar by DeviceType displays devices of that type
+## API Endpoints
 
-# Pagination
-As mentioned pagination is also implimented
+### Auth
 
-# Pie chart
-Pie chart show the time of device at that location
+| Method | Endpoint           | Description             | Payload                                                         |
+| ------ | ------------------ | ----------------------- | --------------------------------------------------------------- |
+| POST   | `/auth/signup`     | User Signup (Public)    | `name, emai (unique), password, role (admin, student, teacher)` |
+| POST   | `/auth/signin`     | User Signin (Public)    | `email, password`                                               |
+| PUT    | `/auth/update/:id` | User Update             | `_id` (in params), fields to be updated (in body)               |
+| DELETE | `/auth/delete/:id` | User Delete             | `_id` (in params)                                               |
+| GET    | `/auth/user/:id`   | Get all users           | `_id` (in params),                                              |
+| GET    | `/auth/all-users`  | Get all users           |                                                                 |
+| GET    | `/video`           | Sample role based route |                                                                 |
 
-## Manual Test case limitations
-- Catching invalid email, password error
-- Catching Unauthorised access
-- Catching invalid token
-- Catching server or database errors
+## Other features
 
-and alerting them all.
+-   [x] Logging using `chalk` : custome logging (winston etc not used, may be required in future)
+-   [x] Organized file structure (routes, controllers, models, services, utils, config)
+-   [x] Error handling
+
+<!-- tags -->
+
+## Tags
+
+`Nodejs` `MongoDB` `JWT` `Authentication` `Authorization` `Express` `Mongoose` `Bcrypt` `Chalk` `Dotenv` `Nodemon`

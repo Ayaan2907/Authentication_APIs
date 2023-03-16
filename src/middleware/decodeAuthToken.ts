@@ -10,7 +10,7 @@ const validateAuthToken = (req: Request, res: Response, next: NextFunction) => {
     const token = authHeader && authHeader.split(" ")[1];
 
     if (token == null) {
-        return commonErrorActions.missingFields(res);
+        return commonErrorActions.missingFields(res, "Token is missing");
     }
     try {
         jwt.verify(token, config.jwt.JWT_SECRET, (err, decodedUser) => {
@@ -27,7 +27,7 @@ const validateAuthToken = (req: Request, res: Response, next: NextFunction) => {
             next();
         });
     } catch (error) {
-        commonErrorActions.other(res, error);
+        commonErrorActions.other(res, error, "Error in token decoding");
     }
 };
 

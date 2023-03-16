@@ -3,11 +3,12 @@ import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 import userCollection from "../models/user.model.js";
 import commonErrorActions from "../types/error.type.js";
-import generateAuthToken from "../middleware/generateAuthToken.js";
 import Logging from "../library/logging.js";
 import { IUser } from "../types/user.type.js";
+import config from "../config/config.js";
+import jwt from "jsonwebtoken";
 
-const createUser = async (req: Request, res: Response, next: NextFunction) => {
+const createUser = async (req: Request, res: Response) => {
     const { name, email, password, role } = req.body;
 
     if (!name || !email || !password) {
@@ -29,7 +30,6 @@ const createUser = async (req: Request, res: Response, next: NextFunction) => {
                 await user.save();
                 Logging.info(`User ${user.name} created`);
                 res.status(201).send({ user });
-                next(loginUser); //FIXME: is it correct or not check
             } catch (error) {
                 commonErrorActions.other(res, error);
             }
@@ -74,23 +74,40 @@ const loginUser = async (req: Request, res: Response, next: NextFunction) => {
         return commonErrorActions.missingFields(res);
     }
 
-    if (!mongoose.isValidObjectId(email)) {
-        return commonErrorActions.invalid(res);
-    }
-
     try {
         const user: IUser | null = await userCollection.findOne({ email });
 
         if (!user) {
             return commonErrorActions.emptyResponse(res);
         }
-        bcrypt.compare(password, user.password).then((result) => {
-            if (result) {
-                const token = generateAuthToken(user, res);
-                Logging.info(`User ${user.name} logged in`);
-                res.header("x-auth-token").status(200).send({ token });
-        // res.header("x-auth-token", token).json({ token });
 
+        // comparing the passwords and generating token
+        bcrypt.compare(password, user.password, (err, result) => {
+            if (err) {
+                return commonErrorActions.other(res, err);
+            }
+            if (result) {
+                const token = jwt.sign(
+                    {
+                        _id: user.id,
+                        name: user.name,
+                        email: user.email,
+                        role: user.role,
+                    },
+                    config.jwt.JWT_SECRET,
+                    {
+                        expiresIn: config.jwt.JWT_EXPIRY_TIME,
+                    }
+                );
+                // res.header("x-auth-token").status(200).send({ token });
+                // res.status(200).send({ token });
+
+                // setting the token in the header for next requests
+                Logging.event(`Token generated for user: ${user.name}`);
+                res.set("Authorization", `Bearer ${token}`)
+                    .status(200)
+                    .send({ token });
+                next();
             } else {
                 commonErrorActions.Unauthorized(res);
             }
@@ -101,10 +118,17 @@ const loginUser = async (req: Request, res: Response, next: NextFunction) => {
 };
 
 const updateUser = async (req: Request, res: Response, next: NextFunction) => {
-    // todo
+    // TODO
+    console.log(req);
+    Logging.event("Update user");
+
+    res.send("Update user");
 };
 const deleteUser = async (req: Request, res: Response, next: NextFunction) => {
     // todo
+    Logging.event("Delete user");
+
+    res.send("Delete user");
 };
 
 export default {
